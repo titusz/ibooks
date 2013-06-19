@@ -1,0 +1,6 @@
+0.1
+---
+
+*Release date: 2013-06-19*
+
+* Initial release
