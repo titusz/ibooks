@@ -1,3 +1,11 @@
+0.2
+---
+
+*Release date: 2013-07-26*
+
+* custom exceptions
+* added .is_preview()
+
 0.1
 ---
 
