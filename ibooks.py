@@ -8,6 +8,13 @@ import xml.etree.ElementTree as etree
 import sys
 
 
+class NotAnIbooksFile(Exception):
+    pass
+
+class MissingCover(Exception):
+    pass
+
+
 class iBooks(object):
 
     NS = {
@@ -23,10 +30,20 @@ class iBooks(object):
         self._tempdir = None
         self._extracted_cover_path = None
 
-        with zipfile.ZipFile(self.filepath, 'r') as zipreader:
-            with zipreader.open('OPS/ibooks.opf') as opf_file:
-                self.opf = etree.fromstring(opf_file.read())
+        try:
+            with zipfile.ZipFile(self.filepath, 'r') as zipreader:
+                with zipreader.open('OPS/ibooks.opf') as opf_file:
+                    self.opf = etree.fromstring(opf_file.read())
+        except (zipfile.BadZipfile, KeyError) as e:
+            raise NotAnIbooksFile(e)
         self._el_meta = self.opf.find('opf:metadata', self.NS)
+
+    def is_preview(self):
+        """Check if ibooks file is a preview file
+
+        :return bool:
+        """
+        return True if self.version is None else False
 
     @property
     def title(self):
@@ -79,9 +96,12 @@ class iBooks(object):
         self._tempdir = self._tempdir or mkdtemp(prefix='ibooks')
         if not self._extracted_cover_path:
             with zipfile.ZipFile(self.filepath, 'r') as zipreader:
-                self._extracted_cover_path = zipreader.extract(
-                    self.IMAGE_PATH, self._tempdir
-                )
+                try:
+                    self._extracted_cover_path = zipreader.extract(
+                        self.IMAGE_PATH, self._tempdir
+                    )
+                except KeyError as e:
+                    raise MissingCover(e)
         return self._extracted_cover_path
 
     def __del__(self):
@@ -100,12 +120,13 @@ def cli():
         ibook = iBooks(sys.argv[1])
     except:
         print('Usage:\n ibooks myfile.ibooks \n')
-        return 1
+        raise
 
     print('Title: %s' % ibook.title)
     print('Author: %s' % ibook.author)
     print('Language: %s' % ibook.language)
     print('Version: %s' % ibook.version)
+    print('Preview: %s' % ibook.is_preview())
     cover_path = os.path.join(
         os.getcwdu(),
         os.path.basename(sys.argv[1]).replace('.ibooks', '-cover.jpg')
