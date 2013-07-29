@@ -10,13 +10,13 @@ here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.rst')).read()
 NEWS = open(os.path.join(here, 'NEWS.txt')).read()
 
-version = '0.2'
+version = '0.3'
 
 setup(
     name='ibooks',
     version=version,
     py_modules=['ibooks'],
-    url='http://github.com/titusz/ibooks',
+    url='http://github.com/titusz/ibooks/',
     license='BSD',
     author='titusz',
     author_email='tp@py7.de',
@@ -26,6 +26,7 @@ setup(
         'console_scripts': ['ibooks = ibooks:cli']
     },
     keywords='ibooks author metadata cover extraction epub epub3',
+    include_package_data=True,
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',

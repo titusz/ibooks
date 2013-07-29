@@ -1,3 +1,11 @@
+0.3
+---
+
+*Release date: 2013-07-29*
+
+* added wheel package and other packaging fixes
+* fix error when calling as script without argument
+
 0.2
 ---
 
