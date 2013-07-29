@@ -11,11 +11,16 @@ import sys
 class NotAnIbooksFile(Exception):
     pass
 
+
 class MissingCover(Exception):
     pass
 
 
 class iBooks(object):
+    """iBooks Author file metadata parser and cover extractor
+
+    :param str filepath: path to .ibooks file
+    """
 
     NS = {
         'opf': 'http://www.idpf.org/2007/opf',
@@ -119,7 +124,7 @@ def cli():
     try:
         ibook = iBooks(sys.argv[1])
     except IndexError:
-        print('Usage:\n ibooks myfile.ibook')
+        print('Usage:\n ibooks myfile.ibooks')
         sys.exit(0)
 
     print('Title: %s' % ibook.title)
