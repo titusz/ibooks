@@ -118,9 +118,9 @@ def cli():
 
     try:
         ibook = iBooks(sys.argv[1])
-    except:
-        print('Usage:\n ibooks myfile.ibooks \n')
-        raise
+    except IndexError:
+        print('Usage:\n ibooks myfile.ibook')
+        sys.exit(0)
 
     print('Title: %s' % ibook.title)
     print('Author: %s' % ibook.author)
@@ -134,3 +134,7 @@ def cli():
     shutil.copy(ibook.cover, cover_path)
     print('Extracted cover to %s' % cover_path)
     return 0
+
+
+if __name__ == '__main__':
+    cli()
